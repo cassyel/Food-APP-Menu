@@ -6,8 +6,7 @@ export function Header() {
     <Container>
       <Text size={14} opacity={.9}>Bem-vindo(a) ao</Text>
       <Text size={24} weight={700}>
-        WAITER
-        <Text size={24}>APP</Text>
+        WAITER<Text size={24}>APP</Text>
       </Text>
     </Container>
   );
