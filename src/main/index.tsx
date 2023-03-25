@@ -24,11 +24,16 @@ export function Main() {
   function handleSaveTable(table: string) {
     setSelectedTable(table);
   }
+
+  function handleCancelOrder() {
+    setSelectedTable('');
+  }
+
   return (
     <Fragment>
 
       <Container>
-        <Header />
+        <Header selectedTable={selectedTable} onCancelOrder={handleCancelOrder}/>
 
         <CategoriesContainer>
           <Categories />
