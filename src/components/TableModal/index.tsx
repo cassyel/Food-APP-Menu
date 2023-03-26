@@ -37,6 +37,7 @@ export function TableModal({ visible, onClose, onSave }: TableModalProps) {
       transparent
       visible={visible}
       animationType="fade"
+      onRequestClose={onClose}
     >
       <Overlay behavior={isAndroid ? 'height' : 'padding'}>
         <ModalBody>
