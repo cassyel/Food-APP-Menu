@@ -17,7 +17,7 @@ import { ProductModal } from '../ProductModal';
 
 import AddToCartButtonWeb from '../../assets/images/AddToCartWeb.svg';
 
-import { Product } from '../../types/Product';
+import { Product } from '../../@types/Product';
 
 
 export function Menu() {
@@ -46,8 +46,7 @@ export function Menu() {
         renderItem={({ item: product }) => (
           <ProductContainer onPress={() => handleOpenModal(product)}>
             <ProductImage source={{
-              uri: `https://food-app-6n6r.onrender.com/uploads/images/
-              ${product.imagePath}`
+              uri: `${process.env.API_BASE_IMAGES}${product.imagePath}`
             }} />
 
             <ProductDetails>

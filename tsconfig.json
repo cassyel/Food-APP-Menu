@@ -4,5 +4,5 @@
     "strict": true
   },
   "typeRoots": ["./src/@types", "./node_modules/@types"],
-  "include": ["src/components", "src/custom.d.ts"]
+  "include": ["src/components", "src/custom.d.ts"],
 }
