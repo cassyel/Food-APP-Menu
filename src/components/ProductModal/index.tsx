@@ -21,13 +21,19 @@ import { Button } from '../Button';
 
 interface ProductModalProps {
   visible: boolean;
-  onClose: () => void;
   product: null | Product;
+  onClose: () => void;
+  onAddToCart: (product: Product) => void;
 }
 
-export function ProductModal({ visible, onClose, product }: ProductModalProps) {
+export function ProductModal({ visible, onClose, product, onAddToCart }:
+   ProductModalProps) {
   if (!product) return null;
 
+  function handleAddToCart() {
+    onAddToCart(product!);
+    onClose();
+  }
   return (
     <Modal
       visible={visible}
@@ -40,7 +46,7 @@ export function ProductModal({ visible, onClose, product }: ProductModalProps) {
         style={{ flex: 1, backgroundColor: '#fafafa' }}>
         <Image
           source={{
-            uri: `${process.env.API_BASE_IMAGES}${product.imagePath}`
+            uri: `${process.env.API_IMAGES}${product.imagePath}`
           }}
         >
           <CloseButton onPress={onClose}>
@@ -90,7 +96,7 @@ export function ProductModal({ visible, onClose, product }: ProductModalProps) {
           </Text>
         </PriceContainer>
 
-        <Button onPress={() => alert('Adicionar ao pedido')} color={'#fff'}>
+        <Button onPress={handleAddToCart} color={'#fff'}>
             Adicionar ao pedido
         </Button>
       </FooterContainer>
