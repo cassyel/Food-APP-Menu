@@ -19,8 +19,11 @@ import AddToCartButtonWeb from '../../assets/images/AddToCartWeb.svg';
 
 import { Product } from '../../@types/Product';
 
+interface MenuProps {
+  onAddToCart: (product: Product) => void;
+}
 
-export function Menu() {
+export function Menu({ onAddToCart } : MenuProps) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<null | Product>(null);
 
@@ -35,18 +38,20 @@ export function Menu() {
         visible={isModalVisible}
         onClose={()  => setIsModalVisible(false)}
         product={selectedProduct}
+        onAddToCart={onAddToCart}
       />
 
       <FlatList
         data={products}
         style={{ marginTop: 32 }}
-        contentContainerStyle={{ paddingHorizontal: 24 }}
+        contentContainerStyle={{ paddingHorizontal: 24, marginBottom: 24 }}
+        showsVerticalScrollIndicator={false}
         keyExtractor={product => product._id}
         ItemSeparatorComponent={Separator}
         renderItem={({ item: product }) => (
           <ProductContainer onPress={() => handleOpenModal(product)}>
             <ProductImage source={{
-              uri: `${process.env.API_BASE_IMAGES}${product.imagePath}`
+              uri: `${process.env.API_IMAGES}${product.imagePath}`
             }} />
 
             <ProductDetails>
@@ -59,7 +64,7 @@ export function Menu() {
               </Text>
             </ProductDetails>
 
-            <AddToCartButton>
+            <AddToCartButton onPress={() => onAddToCart(product)}>
               { isWeb
                 ? <SvgToWeb>{AddToCartButtonWeb}</SvgToWeb>
                 : <PlusCircle />
