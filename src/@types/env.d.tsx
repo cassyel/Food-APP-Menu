@@ -1,3 +1,3 @@
 declare module '@env' {
-  export const API_BASE_IMAGES: string;
+  export const API_IMAGES: string;
 }
