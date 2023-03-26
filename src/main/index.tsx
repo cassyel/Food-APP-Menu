@@ -33,7 +33,10 @@ export function Main() {
     <Fragment>
 
       <Container>
-        <Header selectedTable={selectedTable} onCancelOrder={handleCancelOrder}/>
+        <Header
+          selectedTable={selectedTable}
+          onCancelOrder={handleCancelOrder}
+        />
 
         <CategoriesContainer>
           <Categories />

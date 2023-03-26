@@ -3,7 +3,14 @@ import { isWeb } from '../../utils/isWeb';
 import { Close } from '../Icons/Close';
 import { SvgToWeb } from '../Icons/SvgToWeb/SvgToWeb';
 import { Text } from '../Text';
-import { Overlay, ModalBody, ModalHeader, ModalButton, ModalForm, ModalInput } from './styles';
+import {
+  Overlay,
+  ModalBody,
+  ModalHeader,
+  ModalButton,
+  ModalForm,
+  ModalInput
+} from './styles';
 
 import { isAndroid } from '../../utils/isAndroid';
 

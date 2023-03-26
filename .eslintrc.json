@@ -19,6 +19,7 @@
     "@typescript-eslint"
   ],
   "rules": {
+    "max-len": "error",
     "react/react-in-jsx-scope": "off",
     "object-curly-spacing": [
       "error",

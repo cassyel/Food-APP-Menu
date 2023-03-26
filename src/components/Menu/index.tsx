@@ -6,7 +6,13 @@ import { isWeb } from '../../utils/isWeb';
 import { PlusCircle } from '../Icons/PlusCircle';
 import { Text } from '../Text';
 import { SvgToWeb } from '../Icons/SvgToWeb/SvgToWeb';
-import { ProductContainer, ProductImage, ProductDetails, Separator, AddToCartButton } from './styles';
+import {
+  ProductContainer,
+  ProductImage,
+  ProductDetails,
+  Separator,
+  AddToCartButton
+} from './styles';
 import { ProductModal } from '../ProductModal';
 
 import AddToCartButtonWeb from '../../assets/images/AddToCartWeb.svg';
@@ -40,7 +46,8 @@ export function Menu() {
         renderItem={({ item: product }) => (
           <ProductContainer onPress={() => handleOpenModal(product)}>
             <ProductImage source={{
-              uri: `https://food-app-6n6r.onrender.com/uploads/images/${product.imagePath}`
+              uri: `https://food-app-6n6r.onrender.com/uploads/images/
+              ${product.imagePath}`
             }} />
 
             <ProductDetails>
@@ -48,7 +55,9 @@ export function Menu() {
               <Text color='#666666' size={14} style={{ marginVertical: 8 }}>
                 {product.description}
               </Text>
-              <Text weight={600} size={14}>{formatCurrency(product.price)}</Text>
+              <Text weight={600} size={14}>
+                {formatCurrency(product.price)}
+              </Text>
             </ProductDetails>
 
             <AddToCartButton>
