@@ -1,4 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
+import { SafeAreaView } from 'react-native';
+
+import { Header } from '../components/Header';
+import { Categories } from '../components/Categories/';
+import { Menu } from '../components/Menu';
+import { Button } from '../components/Button';
+import { TableModal } from '../components/TableModal/';
+import { Cart } from '../components/Cart';
+
 import {
   Container,
   CategoriesContainer,
@@ -6,20 +15,13 @@ import {
   FooterContainer,
 }from './styles';
 
-import { Header } from '../components/Header';
-import { Categories } from '../components/Categories/';
-import { Menu } from '../components/Menu';
-import { Button } from '../components/Button';
-import { TableModal } from '../components/TableModal/';
-
-
-
-import { Fragment } from 'react';
-import { SafeAreaView } from 'react-native';
+import { CartItem } from '../@types/CartItem';
+import { Product } from '../@types/Product';
 
 export function Main() {
   const [isTableModalVisible, setIsTableModalVisible] = useState(false);
   const [selectedTable, setSelectedTable] = useState('');
+  const [cartItems, setCarItems] = useState<CartItem[]>([]);
 
   function handleSaveTable(table: string) {
     setSelectedTable(table);
@@ -27,6 +29,59 @@ export function Main() {
 
   function handleCancelOrder() {
     setSelectedTable('');
+    setCarItems([]);
+  }
+
+  function handleAddToCart(product: Product) {
+    if (!selectedTable) setIsTableModalVisible(true);
+
+    setCarItems((prevState) => {
+      const itemIndex = prevState.findIndex(
+        cartItem => cartItem.product._id === product._id
+      );
+
+      if (itemIndex < 0) {
+        return prevState.concat({
+          quantity: 1,
+          product
+        });
+      }
+
+      const newCartItems = [...prevState];
+      const item = newCartItems[itemIndex];
+
+      newCartItems[itemIndex] = {
+        ...item,
+        quantity: item.quantity + 1
+      };
+
+      return newCartItems;
+    });
+  }
+
+  function handleDecrementCartItem(product: Product) {
+    setCarItems((prevState) => {
+      const itemIndex = prevState.findIndex(
+        cartItem => cartItem.product._id === product._id
+      );
+
+      const item = prevState[itemIndex];
+      const newCartItems = [...prevState];
+
+      if (item.quantity === 1) {
+        newCartItems.splice(itemIndex, 1);
+
+        return newCartItems;
+      }
+
+      newCartItems[itemIndex] = {
+        ...item,
+        quantity: item.quantity - 1
+      };
+
+      return newCartItems;
+
+    });
   }
 
   return (
@@ -43,7 +98,7 @@ export function Main() {
         </CategoriesContainer>
 
         <MenuContainer>
-          <Menu />
+          <Menu onAddToCart={handleAddToCart} />
         </MenuContainer>
 
         <FooterContainer>
@@ -57,6 +112,14 @@ export function Main() {
               </Button>
             )
           }
+
+          {selectedTable && (
+            <Cart
+              cartItems={cartItems}
+              onAdd={handleAddToCart}
+              onDecrement={handleDecrementCartItem}
+            />
+          )}
         </FooterContainer>
       </Container>
 
