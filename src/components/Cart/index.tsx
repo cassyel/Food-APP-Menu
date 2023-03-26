@@ -19,23 +19,41 @@ import {
 
 import AddToCartButtonWeb from '../../assets/images/AddToCartWeb.svg';
 import MinusCircleWeb from '../../assets/images/MinusCircleWeb.svg';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { Button } from '../Button';
 import { Product } from '../../@types/Product';
+import { OrderConfirmedModal } from '../OrderConfirmedModal';
 
 interface CartProps {
   cartItems: CartItem[];
   onAdd: (product: Product) => void;
   onDecrement: (product: Product) => void;
+  onConfirmedOrder: () => void;
 }
 
-export function Cart({ cartItems, onAdd, onDecrement }: CartProps) {
+export function Cart({ cartItems, onAdd, onDecrement, onConfirmedOrder }:
+   CartProps) {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const total = cartItems.reduce((acc, cartItem) => {
     return acc + cartItem.quantity * cartItem.product.price;
   }, 0);
 
+  function handleConfirmedOrder() {
+    setIsModalVisible(true);
+  }
+
+  function handleOk() {
+    onConfirmedOrder();
+    setIsModalVisible(false);
+  }
+
   return (
     <Fragment>
+      <OrderConfirmedModal
+        onClose={handleOk}
+        visible={isModalVisible}
+      />
       {cartItems.length > 0 && (
         <FlatList
           data={cartItems}
@@ -93,7 +111,7 @@ export function Cart({ cartItems, onAdd, onDecrement }: CartProps) {
         </TotalContainer>
 
         <Button
-          onPress={() => alert('Confirmar Pedido')}
+          onPress={handleConfirmedOrder}
           color="#fff"
           disabled={cartItems.length === 0}
         >
