@@ -16,7 +16,6 @@ import {
   Summary,
   TotalContainer,
 } from './styles';
-
 import AddToCartButtonWeb from '../../assets/images/AddToCartWeb.svg';
 import MinusCircleWeb from '../../assets/images/MinusCircleWeb.svg';
 import { Fragment, useState } from 'react';
@@ -34,6 +33,7 @@ interface CartProps {
 export function Cart({ cartItems, onAdd, onDecrement, onConfirmedOrder }:
    CartProps) {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isLoading] = useState(false);
 
   const total = cartItems.reduce((acc, cartItem) => {
     return acc + cartItem.quantity * cartItem.product.price;
@@ -114,6 +114,7 @@ export function Cart({ cartItems, onAdd, onDecrement, onConfirmedOrder }:
           onPress={handleConfirmedOrder}
           color="#fff"
           disabled={cartItems.length === 0}
+          loading={isLoading}
         >
           Confirmar Pedido
         </Button>

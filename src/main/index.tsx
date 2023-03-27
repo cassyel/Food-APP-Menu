@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from 'react';
-import { SafeAreaView } from 'react-native';
+import { ActivityIndicator, SafeAreaView, View } from 'react-native';
 
 import { Header } from '../components/Header';
 import { Categories } from '../components/Categories/';
@@ -8,20 +8,31 @@ import { Button } from '../components/Button';
 import { TableModal } from '../components/TableModal/';
 import { Cart } from '../components/Cart';
 
+import { Empty } from '../components/Icons/Empty';
+import { products as mockProducts } from '../mocks/products';
+
 import {
   Container,
   CategoriesContainer,
   MenuContainer,
+  CenteredContainer,
   FooterContainer,
 }from './styles';
 
 import { CartItem } from '../@types/CartItem';
 import { Product } from '../@types/Product';
+import { isWeb } from '../utils/isWeb';
+import { SvgToWeb } from '../components/Icons/SvgToWeb/SvgToWeb';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const EmptyToWeb = require('../assets/images/EmptyButton.svg');
 
 export function Main() {
   const [isTableModalVisible, setIsTableModalVisible] = useState(false);
   const [selectedTable, setSelectedTable] = useState('');
   const [cartItems, setCarItems] = useState<CartItem[]>([]);
+  const [isLoading] = useState(false);
+  const [products] = useState<Product[]>([]);
 
   function handleSaveTable(table: string) {
     setSelectedTable(table);
@@ -86,7 +97,7 @@ export function Main() {
   }
 
   return (
-    <Fragment>
+    <View style={{ flex: 1 }}>
 
       <Container>
         <Header
@@ -94,36 +105,58 @@ export function Main() {
           onCancelOrder={handleResetOrder}
         />
 
-        <CategoriesContainer>
-          <Categories />
-        </CategoriesContainer>
+        {!isLoading ? (
+          <Fragment>
+            <CategoriesContainer>
+              <Categories />
+            </CategoriesContainer>
 
-        <MenuContainer>
-          <Menu onAddToCart={handleAddToCart} />
-        </MenuContainer>
-
-        <FooterContainer>
-          {
-            !selectedTable && (
-              <Button
-                color='#fff'
-                alignBottom
-                onPress={() => setIsTableModalVisible(true)}>
-              Novo Pedido
-              </Button>
-            )
-          }
-
-          {selectedTable && (
-            <Cart
-              cartItems={cartItems}
-              onAdd={handleAddToCart}
-              onDecrement={handleDecrementCartItem}
-              onConfirmedOrder={handleResetOrder}
-            />
-          )}
-        </FooterContainer>
+            {products.length > 0 ? (
+              <MenuContainer>
+                <Menu
+                  onAddToCart={handleAddToCart}
+                  products={products}
+                />
+              </MenuContainer>
+            ) : (
+              <CenteredContainer>
+                { isWeb
+                  ? <SvgToWeb width={240} height={178}>{EmptyToWeb}</SvgToWeb>
+                  : <Empty />
+                }
+              </CenteredContainer>
+            )}
+          </Fragment>
+        ) : (
+          <CenteredContainer>
+            <ActivityIndicator color="#D73035" size={'large'} />
+          </CenteredContainer>
+        )}
       </Container>
+
+      <FooterContainer>
+        {
+          !selectedTable && (
+            <Button
+              color='#fff'
+              alignBottom
+              onPress={() => setIsTableModalVisible(true)}
+              disabled={isLoading}
+            >
+              Novo Pedido
+            </Button>
+          )
+        }
+
+        {selectedTable && (
+          <Cart
+            cartItems={cartItems}
+            onAdd={handleAddToCart}
+            onDecrement={handleDecrementCartItem}
+            onConfirmedOrder={handleResetOrder}
+          />
+        )}
+      </FooterContainer>
 
       <TableModal
         visible={isTableModalVisible}
@@ -134,6 +167,6 @@ export function Main() {
       <SafeAreaView
         style={{ backgroundColor: '#fff' }}
       />
-    </Fragment>
+    </View>
   );
 }
