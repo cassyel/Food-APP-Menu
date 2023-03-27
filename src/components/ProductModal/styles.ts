@@ -6,7 +6,7 @@ export const Image = styled.ImageBackground`
   align-items: flex-end;
 `;
 
-export const CloseButton = styled.TouchableOpacity`
+export const CloseButton = styled.Pressable`
   width: 32px;
   height: 32px;
   background: rgba(0, 0, 0, 0.5);

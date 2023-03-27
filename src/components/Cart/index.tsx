@@ -1,4 +1,4 @@
-import { FlatList, TouchableOpacity } from 'react-native';
+import { FlatList, Pressable } from 'react-native';
 import { CartItem } from '../../@types/CartItem';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { isWeb } from '../../utils/isWeb';
@@ -80,18 +80,18 @@ export function Cart({ cartItems, onAdd, onDecrement, onConfirmedOrder }:
               </ProductContainer>
 
               <Actions>
-                <TouchableOpacity onPress={() => onAdd(product)}>
+                <Pressable onPress={() => onAdd(product)}>
                   { isWeb
                     ? <SvgToWeb>{AddToCartButtonWeb}</SvgToWeb>
                     : <PlusCircle />
                   }
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => onDecrement(product)}>
+                </Pressable>
+                <Pressable onPress={() => onDecrement(product)}>
                   { isWeb
                     ? <SvgToWeb>{MinusCircleWeb}</SvgToWeb>
                     : <MinusCircle />
                   }
-                </TouchableOpacity>
+                </Pressable>
               </Actions>
             </ItemContainer>
           )}

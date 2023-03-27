@@ -20,7 +20,7 @@ export const ModalHeader = styled.View`
   justify-content: space-between;
 `;
 
-export const ModalButton = styled.TouchableOpacity`
+export const ModalButton = styled.Pressable`
   outline-width: 0;
   outline-style: initial;
 `;

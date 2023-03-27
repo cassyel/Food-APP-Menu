@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 import { isAndroid } from '../../utils/isAndroid';
 
 
-export const Category = styled.TouchableOpacity`
+export const Category = styled.Pressable`
   align-items: center;
   margin-left: 24px;
 `;
