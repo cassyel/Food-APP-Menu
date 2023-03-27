@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import { ActivityIndicator, SafeAreaView, View } from 'react-native';
 
 import { Header } from '../components/Header';
@@ -7,9 +7,18 @@ import { Menu } from '../components/Menu';
 import { Button } from '../components/Button';
 import { TableModal } from '../components/TableModal/';
 import { Cart } from '../components/Cart';
-
 import { Empty } from '../components/Icons/Empty';
-import { products as mockProducts } from '../mocks/products';
+import { SvgToWeb } from '../components/Icons/SvgToWeb/SvgToWeb';
+
+import { CartItem } from '../@types/CartItem';
+import { Product } from '../@types/Product';
+import { ICategory } from '../@types/Category';
+
+import { isWeb } from '../utils/isWeb';
+import axios from 'axios';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const EmptyToWeb = require('../assets/images/EmptyButton.svg');
 
 import {
   Container,
@@ -17,22 +26,28 @@ import {
   MenuContainer,
   CenteredContainer,
   FooterContainer,
-}from './styles';
+} from './styles';
 
-import { CartItem } from '../@types/CartItem';
-import { Product } from '../@types/Product';
-import { isWeb } from '../utils/isWeb';
-import { SvgToWeb } from '../components/Icons/SvgToWeb/SvgToWeb';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const EmptyToWeb = require('../assets/images/EmptyButton.svg');
 
 export function Main() {
   const [isTableModalVisible, setIsTableModalVisible] = useState(false);
   const [selectedTable, setSelectedTable] = useState('');
   const [cartItems, setCarItems] = useState<CartItem[]>([]);
-  const [isLoading] = useState(false);
-  const [products] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+
+
+  useEffect(() => {
+    Promise.all([
+      axios.get(`${process.env.API_BASE}/categories`),
+      axios.get(`${process.env.API_BASE}/products`),
+    ]).then(([categoriesResponse, productsResponse]) => {
+      setCategories(categoriesResponse.data);
+      setProducts(productsResponse.data);
+      setIsLoading(false);
+    });
+  }, []);
 
   function handleSaveTable(table: string) {
     setSelectedTable(table);
@@ -108,7 +123,7 @@ export function Main() {
         {!isLoading ? (
           <Fragment>
             <CategoriesContainer>
-              <Categories />
+              <Categories categories={categories} />
             </CategoriesContainer>
 
             {products.length > 0 ? (
