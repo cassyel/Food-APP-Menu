@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { Pressable } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { Text } from '../Text';
 import { Container, Content, OrderHeader, Table } from './styles';
 
@@ -11,7 +11,7 @@ interface HeaderProps {
 export function Header({ selectedTable, onCancelOrder }: HeaderProps) {
   return (
     <Container>
-      {!selectedTable && (
+      {!selectedTable ? (
         <Fragment>
           <Text size={14} opacity={.9}>Bem-vindo(a) ao</Text>
           <Text size={24} weight={700}>
@@ -19,9 +19,7 @@ export function Header({ selectedTable, onCancelOrder }: HeaderProps) {
             <Text size={24}>APP</Text>
           </Text>
         </Fragment>
-      )}
-
-      {selectedTable && (
+      ): (
         <Content>
 
           <OrderHeader>

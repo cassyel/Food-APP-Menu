@@ -24,9 +24,9 @@ export function Button({
       disabled={disabled || loading}
       alignBottom={alignBottom}
       onPress={onPress}>
-      { !loading
-        ? ( <Text weight={600} color={color}>{children}</Text>)
-        : (<ActivityIndicator color="#fff"/>)
+      { loading
+        ? ( <ActivityIndicator color="#fff"/>)
+        : ( <Text weight={600} color={color}>{children}</Text>)
       }
     </Container>
   );

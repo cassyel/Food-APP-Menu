@@ -15,7 +15,7 @@ import { Product } from '../@types/Product';
 import { ICategory } from '../@types/Category';
 
 import { isWeb } from '../utils/isWeb';
-import axios from 'axios';
+import { api } from '../utils/api';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const EmptyToWeb = require('../assets/images/EmptyButton.svg');
@@ -27,6 +27,7 @@ import {
   CenteredContainer,
   FooterContainer,
 } from './styles';
+import axios from 'axios';
 
 
 export function Main() {
@@ -36,18 +37,42 @@ export function Main() {
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(false);
 
 
   useEffect(() => {
     Promise.all([
-      axios.get(`${process.env.API_BASE}/categories`),
-      axios.get(`${process.env.API_BASE}/products`),
+      api.get('/categories'),
+      api.get('/products'),
+
     ]).then(([categoriesResponse, productsResponse]) => {
       setCategories(categoriesResponse.data);
       setProducts(productsResponse.data);
       setIsLoading(false);
     });
+
+    api.post('/login', {
+      name: process.env.AUTHORIZATION_NAME,
+      email: process.env.AUTHORIZATION_EMAIL,
+      password: process.env.AUTHORIZATION_PASSWORD,
+    }).then(({ data }) => {
+      api.defaults.headers.common.Authorization = `Bearer ${data.token}`;
+    });
+
+
   }, []);
+
+  async function handleSelectCategory(categoriId: string) {
+    const route = !categoriId
+      ? '/products'
+      : `/categories/${categoriId}/products`;
+
+
+    setIsLoadingProducts(true);
+    const response = await api.get(route);
+    setProducts(response.data);
+    setIsLoadingProducts(false);
+  }
 
   function handleSaveTable(table: string) {
     setSelectedTable(table);
@@ -120,55 +145,69 @@ export function Main() {
           onCancelOrder={handleResetOrder}
         />
 
-        {!isLoading ? (
-          <Fragment>
-            <CategoriesContainer>
-              <Categories categories={categories} />
-            </CategoriesContainer>
-
-            {products.length > 0 ? (
-              <MenuContainer>
-                <Menu
-                  onAddToCart={handleAddToCart}
-                  products={products}
-                />
-              </MenuContainer>
-            ) : (
-              <CenteredContainer>
-                { isWeb
-                  ? <SvgToWeb width={240} height={178}>{EmptyToWeb}</SvgToWeb>
-                  : <Empty />
-                }
-              </CenteredContainer>
-            )}
-          </Fragment>
-        ) : (
+        {isLoading ? (
           <CenteredContainer>
             <ActivityIndicator color="#D73035" size={'large'} />
           </CenteredContainer>
+        ) : (
+          <Fragment>
+            <CategoriesContainer>
+              <Categories
+                onSelectCategory={handleSelectCategory}
+                categories={categories}
+              />
+            </CategoriesContainer>
+
+            { isLoadingProducts ? (
+              <CenteredContainer>
+                <ActivityIndicator color="#D73035" size={'large'} />
+              </CenteredContainer>
+            ) : (
+              <Fragment>
+                {products.length > 0 ? (
+                  <MenuContainer>
+                    <Menu
+                      onAddToCart={handleAddToCart}
+                      products={products}
+                    />
+                  </MenuContainer>
+                ) : (
+                  <CenteredContainer>
+                    { isWeb
+                      ? <SvgToWeb
+                        width={240}
+                        height={178}
+                      >
+                        {EmptyToWeb}
+                      </SvgToWeb>
+                      : <Empty />
+                    }
+                  </CenteredContainer>
+                )}
+              </Fragment>
+            )}
+          </Fragment>
         )}
       </Container>
 
       <FooterContainer>
-        {
-          !selectedTable && (
-            <Button
-              color='#fff'
-              alignBottom
-              onPress={() => setIsTableModalVisible(true)}
-              disabled={isLoading}
-            >
+        {!selectedTable ? (
+          <Button
+            color='#fff'
+            alignBottom
+            onPress={() => setIsTableModalVisible(true)}
+            disabled={isLoading}
+            loading={isLoading}
+          >
               Novo Pedido
-            </Button>
-          )
-        }
-
-        {selectedTable && (
+          </Button>
+        ) : (
           <Cart
             cartItems={cartItems}
             onAdd={handleAddToCart}
             onDecrement={handleDecrementCartItem}
             onConfirmedOrder={handleResetOrder}
+            selectedTable={selectedTable}
           />
         )}
       </FooterContainer>

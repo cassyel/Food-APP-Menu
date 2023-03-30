@@ -5,18 +5,18 @@ import { useState } from 'react';
 import { ICategory } from '../../@types/Category';
 
 interface CategoriesProps {
-  categories: ICategory[]
+  categories: ICategory[];
+  onSelectCategory: (categoryId: string) => Promise<void>;
 }
 
-export function Categories({ categories }: CategoriesProps) {
+export function Categories({ categories, onSelectCategory }: CategoriesProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   function handleSelectCategory(categoryId: string) {
-    setSelectedCategory(
-      selectedCategory !== categoryId
-        ? categoryId
-        : null
-    );
+    const category = selectedCategory === categoryId ? '' : categoryId;
+
+    setSelectedCategory(category);
+    onSelectCategory(category);
   }
 
   return (

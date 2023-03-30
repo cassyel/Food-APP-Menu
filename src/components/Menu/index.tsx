@@ -51,7 +51,7 @@ export function Menu({ onAddToCart, products } : MenuProps) {
         renderItem={({ item: product }) => (
           <ProductContainer onPress={() => handleOpenModal(product)}>
             <ProductImage source={{
-              uri: `${process.env.API_IMAGES}${product.imagePath}`
+              uri: `${process.env.API_IMAGES}/${product.imagePath}`
             }} />
 
             <ProductDetails>

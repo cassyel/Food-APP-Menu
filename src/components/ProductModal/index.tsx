@@ -46,7 +46,7 @@ export function ProductModal({ visible, onClose, product, onAddToCart }:
         style={{ flex: 1, backgroundColor: '#fafafa' }}>
         <Image
           source={{
-            uri: `${process.env.API_IMAGES}${product.imagePath}`
+            uri: `${process.env.API_IMAGES}/${product.imagePath}`
           }}
         >
           <CloseButton onPress={onClose}>

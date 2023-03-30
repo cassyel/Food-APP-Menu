@@ -23,23 +23,46 @@ import { Button } from '../Button';
 import { Product } from '../../@types/Product';
 import { OrderConfirmedModal } from '../OrderConfirmedModal';
 
+import { api } from '../../utils/api';
+
 interface CartProps {
   cartItems: CartItem[];
+  selectedTable: string
   onAdd: (product: Product) => void;
   onDecrement: (product: Product) => void;
   onConfirmedOrder: () => void;
 }
 
-export function Cart({ cartItems, onAdd, onDecrement, onConfirmedOrder }:
-   CartProps) {
+export function Cart({
+  cartItems,
+  onAdd,
+  onDecrement,
+  onConfirmedOrder,
+  selectedTable: tableNumber,
+}: CartProps) {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const total = cartItems.reduce((acc, cartItem) => {
     return acc + cartItem.quantity * cartItem.product.price;
   }, 0);
 
-  function handleConfirmedOrder() {
+  async function handleConfirmedOrder() {
+    setIsLoading(true);
+    const response = await api.post('/orders', {
+      table: tableNumber.length < 2 ? '0'.concat(tableNumber) : tableNumber,
+      products: cartItems.map((cartItem) => ({
+        product: cartItem.product._id,
+        quantity: cartItem.quantity,
+      })),
+    });
+
+    console.log(' -----------------------------------------------------------');
+    console.log('handleConfirmedOrder  \n response:', response.data);
+    console.log('handleConfirmedOrder  \n response:', response.status);
+    console.log(' -----------------------------------------------------------');
+
+    setIsLoading(false);
     setIsModalVisible(true);
   }
 
@@ -64,7 +87,7 @@ export function Cart({ cartItems, onAdd, onDecrement, onConfirmedOrder }:
             <ItemContainer>
               <ProductContainer>
                 <Image source={{
-                  uri: `${process.env.API_IMAGES}${product.imagePath}`
+                  uri: `${process.env.API_IMAGES}/${product.imagePath}`
                 }} />
 
                 <QuantityContainer>
