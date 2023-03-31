@@ -49,18 +49,13 @@ export function Cart({
 
   async function handleConfirmedOrder() {
     setIsLoading(true);
-    const response = await api.post('/orders', {
+    await api.post('/orders', {
       table: tableNumber.length < 2 ? '0'.concat(tableNumber) : tableNumber,
       products: cartItems.map((cartItem) => ({
         product: cartItem.product._id,
         quantity: cartItem.quantity,
       })),
     });
-
-    console.log(' -----------------------------------------------------------');
-    console.log('handleConfirmedOrder  \n response:', response.data);
-    console.log('handleConfirmedOrder  \n response:', response.status);
-    console.log(' -----------------------------------------------------------');
 
     setIsLoading(false);
     setIsModalVisible(true);
