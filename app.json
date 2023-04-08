@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/iconPWA.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#d73035"
     },
     "assetBundlePatterns": [
       "**/*"
