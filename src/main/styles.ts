@@ -29,3 +29,12 @@ export const FooterContainer = styled.View`
   background-color: #ffffff;
   padding: 16px;
 ` ;
+export const RedirectContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  padding: 20px;
+  text-align: center;
+`;
+
