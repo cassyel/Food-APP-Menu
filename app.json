@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Food-APP-menu",
-    "slug": "Food-APP-menu",
+    "name": "Food-APP-Menu",
+    "slug": "Food-APP-Menu",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/iconPWA.png",
